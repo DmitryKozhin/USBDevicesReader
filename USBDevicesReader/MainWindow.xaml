@@ -1,0 +1,52 @@
+﻿<Window x:Class="USBDevicesReader.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="300" Width="650" MinHeight="200" MinWidth="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <StackPanel Grid.Row="0" 
+                    Orientation="Horizontal">
+            <TextBlock Text="Search:" 
+                       Margin="5"
+                       VerticalAlignment="Center"/>
+            <TextBox Margin="5" 
+                     Text="{Binding SearchString}"
+                     x:Name="SearchTextBox"
+                     Width="200"
+                     ToolTip="Search field">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="KeyUp">
+                        <i:InvokeCommandAction 
+                            Command="{Binding KeyUpCommand}" 
+                            CommandParameter="{Binding ElementName=SearchTextBox}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </TextBox>
+        </StackPanel>
+        
+        <ListView
+            Grid.Row="1"
+            ToolTip="All connected HID devices"
+            ItemsSource="{Binding HidDeviceCollection}"
+            SelectedItem="{Binding SelectedHidDevice}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn DisplayMemberBinding="{Binding FriendlyName}">Name</GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding Product}">Product</GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding Vendor}">Vendor</GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding Version}">Version</GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding ProductId}">Product Id</GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding VendorId}">Vendor Id</GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</Window>
