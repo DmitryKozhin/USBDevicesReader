@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using USBDevicesReader.Tools;
 
 namespace USBDevicesReader
 {
@@ -10,6 +11,8 @@ namespace USBDevicesReader
         public MainWindow()
         {
             InitializeComponent();
+            Logger.Source.InitLogger();
+            Logger.Source.Log.Info("Application started");
 
             Window window = new Window();
             this.Show();

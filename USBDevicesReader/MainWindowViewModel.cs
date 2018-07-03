@@ -7,8 +7,6 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using log4net;
-using log4net.Config;
 using Microsoft.Expression.Interactivity.Core;
 using RawHidReading;
 using USBDevicesReader.Tools;
@@ -26,7 +24,6 @@ namespace USBDevicesReader
         private DeviceViewModel _selectedHidDevice;
         private string _searchString;
 
-        private readonly ILog _log = LogManager.GetLogger("LOGGER");
         private readonly ManagementEventWatcher _updateEventWatcher;
         private readonly HidDevice[] _devices;
         private readonly HID _hid;
@@ -49,9 +46,7 @@ namespace USBDevicesReader
         /// </summary>
         /// <param name="window">Application window</param>
         public MainWindowViewModel(Window window)
-        {
-            XmlConfigurator.Configure();
-            _log.Info("Application started");
+        {        
             KeyUpCommand = new ActionCommand(KeyUpExecute);
 
             try
@@ -74,8 +69,11 @@ namespace USBDevicesReader
                 _updateEventWatcher.Start();
             }
             catch (Exception e)
-            {
-                _log.Fatal("HID device update error", e);
+            {              
+                Logger.Source.Log.Fatal("HID device update error", e);
+                MessageBox.Show(e.Message, "Fatal error", 
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                Environment.Exit(1);
             }        
         }
 
@@ -84,7 +82,7 @@ namespace USBDevicesReader
         /// </summary>
         ~MainWindowViewModel()
         {
-            _updateEventWatcher.Stop();
+            _updateEventWatcher?.Stop();
         }
 
         #endregion
